@@ -67,17 +67,41 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 ## Project Structure
 
 ```text
-AI-Product-Description-Generator
+## Project Structure
+
 │
 ├── frontend
 │   ├── src
 │   │   ├── assets
+│   │   │   └── Images and static resources
+│   │   │
 │   │   ├── components
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Hero.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── FeatureCard.jsx
+│   │   │   ├── WhyChooseUs.jsx
+│   │   │   │
+│   │   │   └── ui
+│   │   │       ├── Button.jsx
+│   │   │       ├── Input.jsx
+│   │   │       ├── Modal.jsx
+│   │   │       ├── Toast.jsx
+│   │   │       ├── Loader.jsx
+│   │   │       └── index.js
+│   │   │
 │   │   ├── pages
+│   │   │   ├── Home.jsx
+│   │   │   ├── About.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   └── Generate.jsx
+│   │   │
 │   │   ├── App.jsx
-│   │   └── main.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
 │   │
-│   └── package.json
+│   ├── package.json
+│   └── vite.config.js
 │
 ├── backend
 │
