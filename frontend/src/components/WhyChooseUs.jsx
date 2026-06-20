@@ -2,19 +2,17 @@ import FeatureCard from "./FeatureCard";
 
 function WhyChooseUs() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-50 dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-6">
-
         <h2 className="text-4xl font-bold text-center mb-4">
           What Can ProDescription AI Generate?
         </h2>
 
-        <p className="text-center text-gray-600 mb-12">
+        <p className="text-center text-gray-600 dark:text-gray-300 mb-12">
           Everything required to create professional and engaging product listings.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-
           <FeatureCard
             title="Product Descriptions"
             description="Generate detailed and engaging product descriptions for e-commerce platforms."
@@ -34,7 +32,6 @@ function WhyChooseUs() {
             title="Social Media Captions"
             description="Create promotional captions for Instagram, Facebook and other platforms."
           />
-
         </div>
       </div>
     </section>
