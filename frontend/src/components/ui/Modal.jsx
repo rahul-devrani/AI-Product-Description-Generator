@@ -4,10 +4,10 @@ import { useEffect } from "react";
  * Modal Component
  *
  * Props:
- * - isOpen: boolean
- * - onClose: function
- * - title: string
- * - children: ReactNode
+ * isOpen : controls modal visibility
+ * onClose : closes the modal
+ * title : modal heading
+ * children : modal content
  */
 
 function Modal({ isOpen, onClose, title, children }) {

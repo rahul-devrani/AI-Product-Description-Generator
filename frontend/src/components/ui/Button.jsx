@@ -1,3 +1,14 @@
+/**
+ * Button Component
+ *
+ * Props:
+ * variant : primary, secondary, outline
+ * size : sm, md, lg
+ * disabled : true or false
+ * onClick : function
+ * children : button text
+ */
+
 export default function Button({
   children,
   variant = "primary",

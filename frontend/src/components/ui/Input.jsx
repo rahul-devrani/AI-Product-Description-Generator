@@ -1,3 +1,15 @@
+/**
+ * Input Component
+ *
+ * Props:
+ * label : input label
+ * placeholder : placeholder text
+ * type : text, email, password, etc.
+ * value : input value
+ * onChange : change handler
+ * error : error message
+ */
+
 export default function Input({
   label,
   placeholder,
