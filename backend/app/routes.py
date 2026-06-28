@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Response
 
 from app.models import ProductRequest, Product
 from app.data import products
@@ -6,10 +6,14 @@ from app.data import products
 router = APIRouter()
 
 
-@router.get("/products")
+@router.get(
+    "/products",
+    status_code=status.HTTP_200_OK
+)
 def get_products():
 
-    if len(products) == 0:
+    if not products:
+
         return {
             "message": "No products generated yet. Database not connected.",
             "products": []
@@ -21,16 +25,21 @@ def get_products():
     }
 
 
-@router.get("/products/{product_id}")
+@router.get(
+    "/products/{product_id}",
+    response_model=Product,
+    status_code=status.HTTP_200_OK
+)
 def get_product(product_id: int):
 
     for product in products:
 
         if product.id == product_id:
+
             return product
 
     raise HTTPException(
-        status_code=404,
+        status_code=status.HTTP_404_NOT_FOUND,
         detail="Product not found."
     )
 
@@ -86,24 +95,36 @@ def generate_product(product: ProductRequest):
     return new_product
 
 
-@router.put("/products/{product_id}", response_model=Product)
-def update_product(product_id: int, updated_product: Product):
+@router.put(
+    "/products/{product_id}",
+    response_model=Product,
+    status_code=status.HTTP_200_OK
+)
+def update_product(
+    product_id: int,
+    updated_product: Product
+):
 
     for index, product in enumerate(products):
 
         if product.id == product_id:
+
+            updated_product.id = product_id
 
             products[index] = updated_product
 
             return updated_product
 
     raise HTTPException(
-        status_code=404,
+        status_code=status.HTTP_404_NOT_FOUND,
         detail="Product not found."
     )
 
 
-@router.delete("/products/{product_id}")
+@router.delete(
+    "/products/{product_id}",
+    status_code=status.HTTP_204_NO_CONTENT
+)
 def delete_product(product_id: int):
 
     for product in products:
@@ -112,17 +133,20 @@ def delete_product(product_id: int):
 
             products.remove(product)
 
-            return {
-                "message": "Product deleted successfully."
-            }
+            return Response(
+                status_code=status.HTTP_204_NO_CONTENT
+            )
 
     raise HTTPException(
-        status_code=404,
+        status_code=status.HTTP_404_NOT_FOUND,
         detail="Product not found."
     )
 
 
-@router.get("/search")
+@router.get(
+    "/search",
+    status_code=status.HTTP_200_OK
+)
 def search_products(q: str):
 
     result = []
@@ -130,12 +154,21 @@ def search_products(q: str):
     for product in products:
 
         if (
+
             q.lower() in product.product_name.lower()
-            or q.lower() in product.tone.lower()
+
+            or
+
+            q.lower() in product.tone.lower()
+
         ):
+
             result.append(product)
 
     return {
+
         "count": len(result),
+
         "products": result
+
     }
