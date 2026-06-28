@@ -51,16 +51,18 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 
 ### Database
 
-* MongoDB Atlas
+* In-Memory Storage (Current)
+* MongoDB Atlas (Planned)
 
 ### AI Integration
 
-* Google Gemini API
+* Rule-Based Content Generator (Current)
+* Google Gemini API (Planned)
 
 ### Deployment
 
-* Vercel (Frontend)
-* Render (Backend)
+* Vercel (Planned)
+* Render (Planned)
 
 ---
 
@@ -110,25 +112,50 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 ```
 
 ---
+## Backend
 
+The backend is built using FastAPI and provides RESTful APIs for product content generation and management.
+
+### Available APIs
+
+- GET /
+- GET /products
+- GET /products/{id}
+- POST /generate
+- PUT /products/{id}
+- DELETE /products/{id}
+- GET /search
+
+---
 
 ## Current Status
 
-* GitHub Repository Initialized
-* Project Structure Created
-* React Application Setup
-* Tailwind CSS Configuration
-* Multi-Page Routing
-* Responsive UI Development
-* Dashboard and Generate Page Layout
+### Completed
+
+- GitHub Repository Initialized
+- React + Vite Frontend
+- Tailwind CSS Configuration
+- Responsive UI
+- Multi-Page Routing
+- Dashboard Page
+- Generate Page
+- Component Library
+- FastAPI Backend
+- RESTful CRUD APIs
+- Search API
+- Swagger API Documentation
+- Frontend–Backend Integration using Axios
+- Dark / Light Mode
+- Error Handling & Loading States
 
 ### Upcoming
 
-* Backend Development using FastAPI
-* MongoDB Integration
-* Gemini API Integration
-* Authentication System
-* Deployment
+- MongoDB / PostgreSQL Integration
+- Google Gemini API Integration
+- User Authentication (JWT)
+- Product History
+- PDF Export
+- Deployment (Vercel + Render)
 
 ---
 
