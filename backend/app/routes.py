@@ -1,9 +1,51 @@
 from fastapi import APIRouter, HTTPException, status, Response
 
 from app.models import ProductRequest, Product
-from app.data import products
+from app.database import products_collection
 
 router = APIRouter()
+
+
+def get_next_id():
+
+    last_product = products_collection.find_one(
+        sort=[("id", -1)]
+    )
+
+    if last_product:
+
+        return last_product["id"] + 1
+
+    return 1
+
+
+def product_to_model(product):
+
+    return Product(
+
+        id=product["id"],
+
+        product_name=product["product_name"],
+
+        ingredients=product["ingredients"],
+
+        weight=product["weight"],
+
+        key_features=product["key_features"],
+
+        tone=product["tone"],
+
+        title=product["title"],
+
+        description=product["description"],
+
+        tagline=product["tagline"],
+
+        seo_keywords=product["seo_keywords"],
+
+        social_caption=product["social_caption"]
+
+    )
 
 
 @router.get(
@@ -12,10 +54,18 @@ router = APIRouter()
 )
 def get_products():
 
-    if not products:
+    products = list(
+        products_collection.find(
+            {},
+            {
+                "_id": 0
+            }
+        )
+    )
 
+    if not products:
         return {
-            "message": "No products generated yet. Database not connected.",
+            "message": "No products found.",
             "products": []
         }
 
@@ -32,16 +82,33 @@ def get_products():
 )
 def get_product(product_id: int):
 
-    for product in products:
+    product = products_collection.find_one(
 
-        if product.id == product_id:
+        {
 
-            return product
+            "id": product_id
 
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Product not found."
+        },
+
+        {
+
+            "_id": 0
+
+        }
+
     )
+
+    if not product:
+
+        raise HTTPException(
+
+            status_code=status.HTTP_404_NOT_FOUND,
+
+            detail="Product not found."
+
+        )
+
+    return product_to_model(product)
 
 
 @router.post(
@@ -51,48 +118,73 @@ def get_product(product_id: int):
 )
 def generate_product(product: ProductRequest):
 
-    new_product = Product(
+    new_product = {
 
-        id=len(products) + 1,
+        "id": get_next_id(),
 
-        product_name=product.product_name,
+        "product_name": product.product_name,
 
-        ingredients=product.ingredients,
+        "ingredients": product.ingredients,
 
-        weight=product.weight,
+        "weight": product.weight,
 
-        key_features=product.key_features,
+        "key_features": product.key_features,
 
-        tone=product.tone,
+        "tone": product.tone,
 
-        title=f"{product.tone} {product.product_name}",
+        "title": f"{product.tone} {product.product_name}",
 
-        description=(
+        "description": (
             f"{product.product_name} is a premium quality product made using "
             f"{product.ingredients}. It comes in {product.weight} packaging "
             f"and offers {product.key_features.lower()}."
         ),
 
-        tagline=f"Experience the goodness of {product.product_name}.",
+        "tagline": f"Experience the goodness of {product.product_name}.",
 
-        seo_keywords=[
+        "seo_keywords": [
+
             product.product_name.lower(),
+
             product.tone.lower(),
+
             "food product",
+
             "healthy",
+
             "premium quality"
+
         ],
 
-        social_caption=(
+        "social_caption": (
             f"✨ Discover {product.product_name}! "
             f"Fresh, healthy and crafted with quality ingredients."
         )
 
-    )
+    }
 
-    products.append(new_product)
+    products_collection.insert_one(new_product)
 
-    return new_product
+    return product_to_model(new_product)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @router.put(
@@ -105,20 +197,30 @@ def update_product(
     updated_product: Product
 ):
 
-    for index, product in enumerate(products):
-
-        if product.id == product_id:
-
-            updated_product.id = product_id
-
-            products[index] = updated_product
-
-            return updated_product
-
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Product not found."
+    existing_product = products_collection.find_one(
+        {"id": product_id}
     )
+
+    if not existing_product:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found."
+        )
+
+        products_collection.update_one(
+            {"id": product_id},
+            {
+                "$set": updated_data
+            }
+        )
+
+        updated = products_collection.find_one(
+            {"id": product_id},
+            {"_id": 0}
+        )
+
+        return product_to_model(updated)
 
 
 @router.delete(
@@ -127,19 +229,21 @@ def update_product(
 )
 def delete_product(product_id: int):
 
-    for product in products:
+    result = products_collection.delete_one(
+        {
+            "id": product_id
+        }
+    )
 
-        if product.id == product_id:
+    if result.deleted_count == 0:
 
-            products.remove(product)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found."
+        )
 
-            return Response(
-                status_code=status.HTTP_204_NO_CONTENT
-            )
-
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Product not found."
+    return Response(
+        status_code=status.HTTP_204_NO_CONTENT
     )
 
 
@@ -149,26 +253,47 @@ def delete_product(product_id: int):
 )
 def search_products(q: str):
 
-    result = []
+    products = list(
+        products_collection.find(
+            {
+                "$or": [
+                    {
+                        "product_name": {
+                            "$regex": q,
+                            "$options": "i"
+                        }
+                    },
 
-    for product in products:
-
-        if (
-
-            q.lower() in product.product_name.lower()
-
-            or
-
-            q.lower() in product.tone.lower()
-
-        ):
-
-            result.append(product)
+                                        {
+                        "ingredients": {
+                            "$regex": q,
+                            "$options": "i"
+                        }
+                    },
+                    {
+                        "key_features": {
+                            "$regex": q,
+                            "$options": "i"
+                        }
+                    },
+                    {
+                        "tone": {
+                            "$regex": q,
+                            "$options": "i"
+                        }
+                    }
+                ]
+            },
+            {
+                "_id": 0
+            }
+        )
+    )
 
     return {
 
-        "count": len(result),
+        "count": len(products),
 
-        "products": result
+        "products": products
 
     }
