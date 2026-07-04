@@ -165,7 +165,7 @@ Example:
 
 ```env
 MONGO_URI = ur_mongodb_connection_string_
-
+```
 ---
 
 # Future Improvements
