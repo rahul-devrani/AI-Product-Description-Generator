@@ -51,8 +51,8 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 
 ### Database
 
-* In-Memory Storage (Current)
-* MongoDB Atlas (Planned)
+* MongoDB Atlas
+* PyMongo
 
 ### AI Integration
 
@@ -128,6 +128,16 @@ The backend is built using FastAPI and provides RESTful APIs for product content
 
 ---
 
+### Database Integration
+
+The backend is fully integrated with MongoDB Atlas using PyMongo.
+
+All CRUD operations including product generation, retrieval, update, deletion, and search are now performed directly on the MongoDB database.
+
+Environment variables are managed using a `.env` file.
+
+---
+
 ## Current Status
 
 ### Completed
@@ -147,10 +157,13 @@ The backend is built using FastAPI and provides RESTful APIs for product content
 - Frontend–Backend Integration using Axios
 - Dark / Light Mode
 - Error Handling & Loading States
+- MongoDB Atlas Integration
+- Database CRUD Operations
+- Environment Variable Configuration
+- Persistent Data Storage
 
 ### Upcoming
 
-- MongoDB / PostgreSQL Integration
 - Google Gemini API Integration
 - User Authentication (JWT)
 - Product History
