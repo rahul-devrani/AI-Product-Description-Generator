@@ -4,7 +4,7 @@
 
 This is the backend service for the **AI Product Description Generator** project developed using **FastAPI**.
 
-The backend provides REST APIs to generate AI-based product content, manage generated products, search products, and perform CRUD operations. Currently, product data is stored in-memory. Database integration will be added in future development.
+The backend provides REST APIs to generate AI-based product content, manage generated products, search products, and perform CRUD operations. Product data is stored in MongoDB Atlas using PyMongo, providing persistent database storage and complete CRUD functionality.
 
 ---
 
@@ -13,6 +13,8 @@ The backend provides REST APIs to generate AI-based product content, manage gene
 * Python
 * FastAPI
 * Uvicorn
+* PyMongo
+* MongoDB Atlas
 * Pydantic
 * Python Dotenv
 
@@ -27,12 +29,30 @@ backend
 │   ├── main.py
 │   ├── routes.py
 │   ├── models.py
-│   └── data.py
+│   └── config.py
+│   └── database.py
 │
 ├── requirements.txt
 ├── .env.example
 ├── README.md
 └── venv/
+```
+
+---
+
+## Current Architecture
+
+```text
+React Frontend
+        │
+        ▼
+Axios API Calls
+        │
+        ▼
+FastAPI Backend
+        │
+        ▼
+MongoDB Atlas
 ```
 
 ---
@@ -48,6 +68,8 @@ backend
 * Request Validation using Pydantic
 * Proper HTTP Status Codes
 * Error Handling
+* MongoDB Atlas Integration
+* Persistent Database Storage
 
 ---
 
@@ -135,19 +157,20 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# Environment Variables
+## Environment Variables
 
-No environment variables are required for the current version of this project.
+Create a `.env` file in the backend directory.
 
-The `.env.example` file is included for future integrations.
-```
+Example:
+
+```env
+MONGO_URI = ur_mongodb_connection_string_
 
 ---
 
 # Future Improvements
 
 * Gemini API Integration
-* PostgreSQL / Supabase Database
 * User Authentication
 * Product History
 * PDF Export
