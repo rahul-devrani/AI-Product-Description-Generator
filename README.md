@@ -66,6 +66,14 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 
 ---
 
+## Database Choice
+
+This project uses **MongoDB Atlas** as the cloud database.
+
+MongoDB was selected because product information is document-based and has a flexible schema. It integrates well with FastAPI using PyMongo and allows easy storage and retrieval of product data while supporting future scalability.
+
+---
+
 ## Project Structure
 
 ```text
@@ -106,6 +114,7 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 │   └── vite.config.js
 │
 ├── backend
+├── images
 │
 ├── .gitignore
 └── README.md
@@ -137,6 +146,46 @@ All CRUD operations including product generation, retrieval, update, deletion, a
 Environment variables are managed using a `.env` file.
 
 ---
+
+## Database Schema
+
+The application currently stores generated product information in a MongoDB collection named `products`.
+
+![Database Schema](images/schema-diagram.jpg)
+
+---
+
+## Set Up the Database
+
+1. Create a free MongoDB Atlas cluster.
+2. Create a database user.
+3. Whitelist your IP address.
+4. Copy the MongoDB connection string.
+5. Create a `.env` file inside the backend folder.
+6. Add your MongoDB connection string.
+7. Install the required packages.
+8. Start the backend server.
+
+Example `.env`
+
+```env
+MONGO_URI=your_mongodb_connection_string
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run backend
+
+```bash
+uvicorn app.main:app --reload
+```
+
+---
+
 
 ## Current Status
 

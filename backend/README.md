@@ -20,6 +20,14 @@ The backend provides REST APIs to generate AI-based product content, manage gene
 
 ---
 
+## Database Choice
+
+This backend uses **MongoDB Atlas** as the primary database.
+
+MongoDB was chosen because product information follows a document-based structure, making it suitable for flexible schemas. PyMongo provides seamless integration with FastAPI for performing CRUD operations and persistent data storage.
+
+---
+
 # Project Structure
 
 ```
@@ -35,7 +43,6 @@ backend
 ├── requirements.txt
 ├── .env.example
 ├── README.md
-└── venv/
 ```
 
 ---
@@ -54,6 +61,13 @@ FastAPI Backend
         ▼
 MongoDB Atlas
 ```
+---
+
+## Database Schema
+
+The application stores generated product information in a MongoDB collection named `products`.
+
+![Database Schema](../images/schema-diagram.jpg)
 
 ---
 
@@ -164,7 +178,7 @@ Create a `.env` file in the backend directory.
 Example:
 
 ```env
-MONGO_URI = ur_mongodb_connection_string_
+MONGO_URI = ur_mongodb_connection_string
 ```
 ---
 
@@ -174,6 +188,8 @@ MONGO_URI = ur_mongodb_connection_string_
 * User Authentication
 * Product History
 * PDF Export
+* Google OAuth Authentication
+
 
 
 ---
