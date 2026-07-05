@@ -208,19 +208,24 @@ def update_product(
             detail="Product not found."
         )
 
-        products_collection.update_one(
-            {"id": product_id},
-            {
-                "$set": updated_data
-            }
-        )
+    updated_data = updated_product.model_dump()
 
-        updated = products_collection.find_one(
-            {"id": product_id},
-            {"_id": 0}
-        )
+    updated_data["id"] = product_id
 
-        return product_to_model(updated)
+    products_collection.update_one(
+        {"id": product_id},
+        {
+            "$set": updated_data
+        }
+    )
+
+    updated = products_collection.find_one(
+        {"id": product_id},
+        {"_id": 0}
+    )
+
+    return product_to_model(updated)
+
 
 
 @router.delete(
