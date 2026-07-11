@@ -1,6 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+
 
 function Navbar({ darkMode, setDarkMode }) {
+  const navigate = useNavigate();
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
+
+  const handleLogout = () => {
+
+  localStorage.removeItem("token");
+
+  localStorage.removeItem("user");
+
+  navigate("/login", { replace: true });
+
+};
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4">
@@ -53,9 +69,50 @@ function Navbar({ darkMode, setDarkMode }) {
               {darkMode ? "☀ Light" : "🌙 Dark"}
             </button>
 
-            <button className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl transition text-sm md:text-base">
+            {/* <button className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl transition text-sm md:text-base">
               Sign Up
-            </button>
+            </button> */}
+
+            {
+  user ? (
+
+    <>
+
+      <span className="text-sm font-semibold text-purple-600">
+        Hi, {user.name.split(" ")[0]}
+      </span>
+
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl transition"
+      >
+        Logout
+      </button>
+
+    </>
+
+  ) : (
+
+    <>
+
+      <Link
+        to="/login"
+        className="border border-purple-600 text-purple-600 hover:bg-purple-50 px-4 py-2 rounded-xl transition"
+      >
+        Login
+      </Link>
+
+      <Link
+        to="/register"
+        className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl transition"
+      >
+        Sign Up
+      </Link>
+
+    </>
+
+  )
+}
 
 
 

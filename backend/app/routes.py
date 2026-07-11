@@ -2,6 +2,9 @@ from fastapi import APIRouter, HTTPException, status, Response
 
 from app.models import ProductRequest, Product
 from app.database import products_collection
+from fastapi import Depends
+from app.auth_dependency import get_current_user
+
 
 router = APIRouter()
 
@@ -52,11 +55,14 @@ def product_to_model(product):
     "/products",
     status_code=status.HTTP_200_OK
 )
-def get_products():
+def get_products(
+    current_user=Depends(get_current_user)):
 
     products = list(
         products_collection.find(
-            {},
+            {
+                "user_email": current_user["sub"]
+            },
             {
                 "_id": 0
             }
@@ -80,14 +86,15 @@ def get_products():
     response_model=Product,
     status_code=status.HTTP_200_OK
 )
-def get_product(product_id: int):
+def get_product(
+    product_id: int,
+    current_user=Depends(get_current_user)):
 
     product = products_collection.find_one(
 
         {
-
-            "id": product_id
-
+            "id": product_id,
+            "user_email": current_user["sub"]
         },
 
         {
@@ -116,11 +123,14 @@ def get_product(product_id: int):
     response_model=Product,
     status_code=status.HTTP_201_CREATED
 )
-def generate_product(product: ProductRequest):
+def generate_product(
+    product: ProductRequest,
+    current_user=Depends(get_current_user)):
 
     new_product = {
 
         "id": get_next_id(),
+        "user_email": current_user["sub"],
 
         "product_name": product.product_name,
 
@@ -194,11 +204,15 @@ def generate_product(product: ProductRequest):
 )
 def update_product(
     product_id: int,
-    updated_product: Product
+    updated_product: Product,
+    current_user=Depends(get_current_user)
 ):
 
     existing_product = products_collection.find_one(
-        {"id": product_id}
+        {
+            "id": product_id,
+            "user_email": current_user["sub"]
+        }
     )
 
     if not existing_product:
@@ -213,14 +227,20 @@ def update_product(
     updated_data["id"] = product_id
 
     products_collection.update_one(
-        {"id": product_id},
+        {
+            "id": product_id,
+            "user_email": current_user["sub"]
+        },
         {
             "$set": updated_data
         }
     )
 
     updated = products_collection.find_one(
-        {"id": product_id},
+        {
+            "id": product_id,
+            "user_email": current_user["sub"]
+        },
         {"_id": 0}
     )
 
@@ -232,11 +252,14 @@ def update_product(
     "/products/{product_id}",
     status_code=status.HTTP_204_NO_CONTENT
 )
-def delete_product(product_id: int):
+def delete_product(
+    product_id: int,
+    current_user=Depends(get_current_user)):
 
     result = products_collection.delete_one(
         {
-            "id": product_id
+            "id": product_id,
+            "user_email": current_user["sub"]
         }
     )
 
@@ -256,12 +279,16 @@ def delete_product(product_id: int):
     "/search",
     status_code=status.HTTP_200_OK
 )
-def search_products(q: str):
+def search_products(
+    q: str,
+    current_user=Depends(get_current_user)):
 
     products = list(
         products_collection.find(
-            {
-                "$or": [
+                {
+                "user_email": current_user["sub"],
+
+                "$or":[
                     {
                         "product_name": {
                             "$regex": q,

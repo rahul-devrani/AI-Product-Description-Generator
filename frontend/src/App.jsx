@@ -6,6 +6,12 @@ import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import Generate from "./pages/Generate";
 
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+
+
 function App() {
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
@@ -24,6 +30,25 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+  path="/login"
+  element={
+    <Login
+      darkMode={darkMode}
+      setDarkMode={setDarkMode}
+    />
+  }
+/>
+
+<Route
+  path="/register"
+  element={
+    <Register
+      darkMode={darkMode}
+      setDarkMode={setDarkMode}
+    />
+  }
+/>
         <Route
           path="/"
           element={
@@ -44,27 +69,34 @@ function App() {
           }
         />
 
-        <Route
-          path="/dashboard"
-          element={
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
             <Dashboard
               darkMode={darkMode}
               setDarkMode={setDarkMode}
             />
-          }
-        />
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/generate"
-          element={
+      <Route
+        path="/generate"
+        element={
+          <ProtectedRoute>
             <Generate
               darkMode={darkMode}
               setDarkMode={setDarkMode}
             />
-          }
-        />
+          </ProtectedRoute>
+        }
+      />
+
       </Routes>
     </BrowserRouter>
+
+    
   );
 }
 
