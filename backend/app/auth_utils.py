@@ -1,6 +1,9 @@
 import bcrypt
 import jwt
 
+from firebase_admin import auth
+import app.firebase_admin
+
 from datetime import datetime, timedelta
 
 from app.config import (
@@ -69,5 +72,17 @@ def verify_access_token(token: str):
         return None
 
     except jwt.InvalidTokenError:
+
+        return None
+    
+def verify_google_token(token: str):
+
+    try:
+
+        decoded_token = auth.verify_id_token(token)
+
+        return decoded_token
+
+    except Exception:
 
         return None

@@ -1,28 +1,63 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+import {
+  Eye,
+  EyeOff,
+  Loader2
+} from "lucide-react";
+
+import {
+  Link,
+  useNavigate
+} from "react-router-dom";
+
+import {
+  signInWithPopup,
+  GoogleAuthProvider
+} from "firebase/auth";
+
+import { auth } from "../firebase";
 
 import Navbar from "../components/Navbar";
 
-import { loginUser } from "../api/auth";
+import {
+  loginUser,
+  googleLogin
+} from "../api/auth";
 
-function Login({ darkMode, setDarkMode }) {
+function Login({
+  darkMode,
+  setDarkMode
+}) {
 
   const navigate = useNavigate();
 
+  const provider = new GoogleAuthProvider();
+
   const [formData, setFormData] = useState({
+
     email: "",
+
     password: ""
+
   });
 
   const [loading, setLoading] = useState(false);
 
+  const [googleLoading, setGoogleLoading] = useState(false);
+
   const [error, setError] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
 
     setFormData({
+
       ...formData,
+
       [e.target.name]: e.target.value
+
     });
 
   };
@@ -46,10 +81,17 @@ function Login({ darkMode, setDarkMode }) {
 
       localStorage.setItem(
         "user",
-        JSON.stringify(response.data.user)
-        );
+        JSON.stringify(
+          response.data.user
+        )
+      );
 
-      navigate("/dashboard", { replace: true });
+      navigate(
+        "/dashboard",
+        {
+          replace: true
+        }
+      );
 
     }
 
@@ -72,7 +114,75 @@ function Login({ darkMode, setDarkMode }) {
     }
 
   };
-    return (
+
+  const handleGoogleLogin = async () => {
+
+    setGoogleLoading(true);
+
+    setError("");
+
+    try {
+
+      const result = await signInWithPopup(
+
+        auth,
+
+        provider
+
+      );
+
+      const idToken =
+        await result.user.getIdToken();
+
+      const response =
+        await googleLogin(idToken);
+
+      localStorage.setItem(
+
+        "token",
+
+        response.data.access_token
+
+      );
+
+      localStorage.setItem(
+
+        "user",
+
+        JSON.stringify(
+          response.data.user
+        )
+
+      );
+
+      navigate(
+        "/dashboard",
+        {
+          replace: true
+        }
+      );
+
+    }
+
+    catch (err) {
+
+      console.error(err);
+
+      setError(
+        "Google Login Failed."
+      );
+
+    }
+
+    finally {
+
+      setGoogleLoading(false);
+
+    }
+
+  };
+
+  return (
 
     <>
 
@@ -86,19 +196,22 @@ function Login({ darkMode, setDarkMode }) {
         <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8">
 
           <h1 className="text-3xl font-bold text-center text-purple-600 mb-2">
+
             Welcome Back
+
           </h1>
 
           <p className="text-center text-gray-500 dark:text-gray-400 mb-8">
+
             Login to ProDescription AI
+
           </p>
 
           <form
             onSubmit={handleSubmit}
             className="space-y-5"
           >
-
-            <div>
+                        <div>
 
               <label className="block mb-2 font-medium">
                 Email Address
@@ -122,45 +235,91 @@ function Login({ darkMode, setDarkMode }) {
                 Password
               </label>
 
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                required
-                className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-purple-500"
-              />
+              <div className="relative">
+
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                  className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 pr-12 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-purple-500"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
+                </button>
+
+              </div>
 
             </div>
 
-            {
-              error && (
-
-                <p className="text-red-500 text-sm">
-
-                  {error}
-
-                </p>
-
-              )
-            }
+            {error && (
+              <p className="text-red-500 text-sm">
+                {error}
+              </p>
+            )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white py-3 rounded-xl font-semibold transition"
+              className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white py-3 rounded-xl font-semibold transition flex justify-center items-center gap-2"
             >
-
-              {
-                loading
-                  ? "Logging In..."
-                  : "Login"
-              }
-
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Logging In...
+                </>
+              ) : (
+                "Login"
+              )}
             </button>
 
-            <p className="text-center text-sm pt-2">
+            <div className="flex items-center my-4">
+
+              <div className="flex-1 border-t border-gray-300"></div>
+
+              <span className="mx-4 text-gray-500 text-sm">
+                OR
+              </span>
+
+              <div className="flex-1 border-t border-gray-300"></div>
+
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={googleLoading}
+              className="w-full border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 py-3 rounded-xl font-semibold transition flex justify-center items-center gap-2"
+            >
+              {googleLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Signing In...
+                </>
+              ) : (
+                <>
+                  <img
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    alt="Google"
+                    className="w-5 h-5"
+                  />
+                  Continue with Google
+                </>
+              )}
+            </button>
+
+            <p className="text-center text-sm pt-4">
 
               Don't have an account?
 

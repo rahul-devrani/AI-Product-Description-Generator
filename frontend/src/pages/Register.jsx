@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff, Loader2  } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
@@ -8,17 +9,22 @@ function Register({ darkMode, setDarkMode }) {
 
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: ""
-  });
+const [formData, setFormData] = useState({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: ""
+});
 
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
 
   const [success, setSuccess] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -39,7 +45,42 @@ function Register({ darkMode, setDarkMode }) {
 
     try {
 
-      await registerUser(formData);
+      if (formData.password !== formData.confirmPassword) {
+
+        setError("Passwords do not match.");
+
+        setLoading(false);
+
+        return;
+
+      }
+
+      const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+      if (!passwordRegex.test(formData.password)) {
+
+        setError(
+          "Password must be at least 8 characters and include uppercase, lowercase and a number."
+        );
+
+        setLoading(false);
+
+        return;
+
+      }
+
+      const payload = {
+
+        name: formData.name,
+
+        email: formData.email,
+
+        password: formData.password
+
+        };
+
+      await registerUser(payload);
 
       setSuccess("Registration successful.");
 
@@ -124,19 +165,74 @@ function Register({ darkMode, setDarkMode }) {
             </div>
 
             <div>
+
               <label className="block mb-2 font-medium">
                 Password
               </label>
 
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                required
-                className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-purple-500"
-              />
+              <div className="relative">
+
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                  className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 pr-12 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-purple-500"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+
+              </div>
+
+              <p className="text-xs text-gray-500 mt-1">
+                Password must contain at least 8 characters, one uppercase letter,
+                one lowercase letter and one number.
+              </p>
+
+            </div>
+
+            <div>
+
+              <label className="block mb-2 font-medium">
+                Confirm Password
+              </label>
+
+              <div className="relative">
+
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
+                  required
+                  className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 pr-12 bg-white dark:bg-gray-800 outline-none focus:ring-2 focus:ring-purple-500"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowConfirmPassword(!showConfirmPassword)
+                  }
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
+                </button>
+
+              </div>
+
             </div>
 
             {
@@ -158,13 +254,16 @@ function Register({ darkMode, setDarkMode }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white py-3 rounded-xl font-semibold transition"
+              className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white py-3 rounded-xl font-semibold transition flex justify-center items-center gap-2"
             >
-              {
-                loading
-                  ? "Creating Account..."
-                  : "Sign Up"
-              }
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </button>
 
             <p className="text-center text-sm pt-2">

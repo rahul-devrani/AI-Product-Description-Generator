@@ -9,3 +9,8 @@ export const registerUser = (data) =>
 
 export const loginUser = (data) =>
   API.post("/auth/login", data);
+
+export const googleLogin = (token) =>
+  API.post("/auth/google", {
+    token,
+  });

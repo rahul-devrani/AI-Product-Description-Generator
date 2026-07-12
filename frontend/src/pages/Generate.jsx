@@ -29,7 +29,7 @@ function Generate({ darkMode, setDarkMode }) {
 
   const [error, setError] = useState("");
 
-
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
 
@@ -39,8 +39,6 @@ function Generate({ darkMode, setDarkMode }) {
     });
 
   };
-
-
 
   const handleReset = () => {
 
@@ -56,20 +54,69 @@ function Generate({ darkMode, setDarkMode }) {
 
     setError("");
 
+    setSuccess("");
+
   };
-
-
 
   const handleGenerate = async () => {
 
-    if (
-      !formData.product_name ||
-      !formData.ingredients ||
-      !formData.weight ||
-      !formData.key_features
-    ) {
+    if (!formData.product_name.trim()) {
 
-      setError("Please fill all the fields.");
+      setError("Product name is required.");
+
+      return;
+
+    }
+
+    if (formData.product_name.trim().length < 3) {
+
+      setError(
+        "Product name must be at least 3 characters."
+      );
+
+      return;
+
+    }
+
+    if (!formData.ingredients.trim()) {
+
+      setError("Ingredients are required.");
+
+      return;
+
+    }
+
+    if (formData.ingredients.trim().length < 3) {
+
+      setError(
+        "Ingredients must be at least 3 characters."
+      );
+
+      return;
+
+    }
+
+    if (!formData.weight.trim()) {
+
+      setError("Weight is required.");
+
+      return;
+
+    }
+
+    if (!formData.key_features.trim()) {
+
+      setError("Key features are required.");
+
+      return;
+
+    }
+
+    if (formData.key_features.trim().length < 5) {
+
+      setError(
+        "Key features must be at least 5 characters."
+      );
 
       return;
 
@@ -79,17 +126,27 @@ function Generate({ darkMode, setDarkMode }) {
 
     setError("");
 
+    setSuccess("");
+
     setGeneratedData(null);
 
     try {
 
-      const response = await generateProduct(formData);
+      const response = await generateProduct(
+        formData
+      );
+            setGeneratedData(response);
 
-      setGeneratedData(response);
+      setSuccess(
+        "Product generated successfully."
+      );
 
       window.scrollTo({
+
         top: document.body.scrollHeight,
+
         behavior: "smooth",
+
       });
 
     }
@@ -98,7 +155,41 @@ function Generate({ darkMode, setDarkMode }) {
 
       console.error(err);
 
-      setError("Failed to generate content. Please try again.");
+      if (err.response?.data?.detail) {
+
+        if (
+          Array.isArray(
+            err.response.data.detail
+          )
+        ) {
+
+          const message = err.response.data.detail
+
+            .map((item) => item.msg)
+
+            .join(", ");
+
+          setError(message);
+
+        }
+
+        else {
+
+          setError(
+            err.response.data.detail
+          );
+
+        }
+
+      }
+
+      else {
+
+        setError(
+          "Something went wrong. Please try again."
+        );
+
+      }
 
     }
 
@@ -110,7 +201,78 @@ function Generate({ darkMode, setDarkMode }) {
 
   };
 
+  const handleCopy = async () => {
 
+    if (!generatedData) return;
+
+    try {
+
+      await navigator.clipboard.writeText(
+
+        generatedData.description
+
+      );
+
+      alert("Description copied.");
+
+    }
+
+    catch {
+
+      alert("Unable to copy.");
+
+    }
+
+  };
+
+  const handleDownload = () => {
+
+    if (!generatedData) return;
+
+    const content = `
+
+Title:
+${generatedData.title}
+
+Description:
+${generatedData.description}
+
+Tagline:
+${generatedData.tagline}
+
+SEO Keywords:
+${generatedData.seo_keywords.join(", ")}
+
+Social Caption:
+${generatedData.social_caption}
+
+`;
+
+    const blob = new Blob(
+
+      [content],
+
+      {
+        type: "text/plain"
+      }
+
+    );
+
+    const url =
+      window.URL.createObjectURL(blob);
+
+    const link =
+      document.createElement("a");
+
+    link.href = url;
+
+    link.download = "product-description.txt";
+
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+
+  };
 
   return (
 
@@ -135,23 +297,24 @@ function Generate({ darkMode, setDarkMode }) {
 
             <p className="text-gray-600 dark:text-gray-300 mb-10">
 
-              Generate product descriptions, titles, taglines,
-              SEO keywords and social media captions instantly.
+              Generate product descriptions,
+              titles, taglines,
+              SEO keywords and
+              social captions instantly.
 
             </p>
-
-
 
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
 
               <div className="grid gap-6">
-
-                <Input
+              
+                              <Input
                   label="Product Name"
                   name="product_name"
                   value={formData.product_name}
                   onChange={handleChange}
                   placeholder="Organic Honey"
+                  disabled={loading}
                 />
 
                 <Input
@@ -160,6 +323,7 @@ function Generate({ darkMode, setDarkMode }) {
                   value={formData.ingredients}
                   onChange={handleChange}
                   placeholder="Pure Honey"
+                  disabled={loading}
                 />
 
                 <Input
@@ -168,6 +332,7 @@ function Generate({ darkMode, setDarkMode }) {
                   value={formData.weight}
                   onChange={handleChange}
                   placeholder="500g"
+                  disabled={loading}
                 />
 
                 <Input
@@ -176,20 +341,20 @@ function Generate({ darkMode, setDarkMode }) {
                   value={formData.key_features}
                   onChange={handleChange}
                   placeholder="Natural, No Added Sugar"
+                  disabled={loading}
                 />
 
                 <div>
 
                   <label className="block mb-2 font-medium">
-
                     Tone
-
                   </label>
 
                   <select
                     name="tone"
                     value={formData.tone}
                     onChange={handleChange}
+                    disabled={loading}
                     className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700"
                   >
 
@@ -209,6 +374,26 @@ function Generate({ darkMode, setDarkMode }) {
 
                 </div>
 
+                {error && (
+
+                  <div className="bg-red-100 text-red-700 px-4 py-3 rounded-lg">
+
+                    {error}
+
+                  </div>
+
+                )}
+
+                {success && (
+
+                  <div className="bg-green-100 text-green-700 px-4 py-3 rounded-lg">
+
+                    {success}
+
+                  </div>
+
+                )}
+
                 <div className="flex gap-4">
 
                   <Button
@@ -218,7 +403,18 @@ function Generate({ darkMode, setDarkMode }) {
                     disabled={loading}
                   >
 
-                    {loading ? "Generating..." : "Generate Content"}
+                    {loading ? (
+
+                      <>
+                        <Loader />
+                        Generating...
+                      </>
+
+                    ) : (
+
+                      "Generate Content"
+
+                    )}
 
                   </Button>
 
@@ -226,6 +422,7 @@ function Generate({ darkMode, setDarkMode }) {
                     variant="secondary"
                     size="md"
                     onClick={handleReset}
+                    disabled={loading}
                   >
 
                     Reset
@@ -234,41 +431,47 @@ function Generate({ darkMode, setDarkMode }) {
 
                 </div>
 
-                {loading && (
-
-                  <div className="flex justify-center">
-
-                    <Loader />
-
-                  </div>
-
-                )}
-
-                {error && (
-
-                  <div className="text-red-500 font-medium">
-
-                    {error}
-
-                  </div>
-
-                )}
-
               </div>
 
             </div>
-
-            {generatedData && (
+                        {generatedData && (
 
               <div className="mt-12 grid gap-6">
-                                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
 
-                  <h3 className="text-xl font-semibold mb-3">
-                    Product Description
-                  </h3>
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+
+                  <div className="flex justify-between items-center mb-4">
+
+                    <h3 className="text-xl font-semibold">
+                      Product Description
+                    </h3>
+
+                    <div className="flex gap-3">
+
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={handleCopy}
+                      >
+                        Copy
+                      </Button>
+
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={handleDownload}
+                      >
+                        Download
+                      </Button>
+
+                    </div>
+
+                  </div>
 
                   <p className="text-gray-600 dark:text-gray-300 leading-7">
+
                     {generatedData.description}
+
                   </p>
 
                 </div>
@@ -280,7 +483,9 @@ function Generate({ darkMode, setDarkMode }) {
                   </h3>
 
                   <p className="text-gray-600 dark:text-gray-300">
+
                     {generatedData.title}
+
                   </p>
 
                 </div>
@@ -292,7 +497,9 @@ function Generate({ darkMode, setDarkMode }) {
                   </h3>
 
                   <p className="text-gray-600 dark:text-gray-300">
+
                     {generatedData.tagline}
+
                   </p>
 
                 </div>
@@ -305,16 +512,22 @@ function Generate({ darkMode, setDarkMode }) {
 
                   <div className="flex flex-wrap gap-3">
 
-                    {generatedData.seo_keywords.map((keyword, index) => (
+                    {generatedData.seo_keywords.map(
 
-                      <span
-                        key={index}
-                        className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-4 py-2 rounded-full text-sm"
-                      >
-                        {keyword}
-                      </span>
+                      (keyword, index) => (
 
-                    ))}
+                        <span
+                          key={index}
+                          className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 px-4 py-2 rounded-full text-sm"
+                        >
+
+                          {keyword}
+
+                        </span>
+
+                      )
+
+                    )}
 
                   </div>
 
@@ -327,7 +540,9 @@ function Generate({ darkMode, setDarkMode }) {
                   </h3>
 
                   <p className="text-gray-600 dark:text-gray-300 leading-7">
+
                     {generatedData.social_caption}
+
                   </p>
 
                 </div>
