@@ -16,7 +16,10 @@ The backend provides REST APIs to generate AI-based product content, manage gene
 * PyMongo
 * MongoDB Atlas
 * Pydantic
-* Python Dotenv
+* Firebase Admin SDK
+* JWT
+* Bcrypt
+* SlowAPI
 
 ---
 
@@ -84,7 +87,13 @@ The application stores generated product information in a MongoDB collection nam
 * Error Handling
 * MongoDB Atlas Integration
 * Persistent Database Storage
-
+* JWT Authentication
+* Google OAuth Authentication
+* Password Hashing using bcrypt
+* Password Validation
+* Protected Routes
+* User-Specific CRUD Operations
+* Authentication Rate Limiting
 ---
 
 # API Endpoints
@@ -98,6 +107,9 @@ The application stores generated product information in a MongoDB collection nam
 | PUT    | /products/{id}    | Update Product           |
 | DELETE | /products/{id}    | Delete Product           |
 | GET    | /search?q=keyword | Search Products          |
+| POST   | /auth/register    | Register User            |
+| POST   | /auth/login       | Login User               |
+| POST   | /auth/google      | Google Login             |
 
 ---
 
@@ -185,12 +197,8 @@ MONGO_URI = ur_mongodb_connection_string
 # Future Improvements
 
 * Gemini API Integration
-* User Authentication
-* Product History
-* PDF Export
-* Google OAuth Authentication
-
-
+* PDF Export 
+* Deployment 
 
 ---
 

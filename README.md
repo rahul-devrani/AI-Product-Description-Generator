@@ -34,6 +34,17 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 * Dashboard Overview
 * Mobile-Friendly Design
 
+### Authentication & Security
+
+* User Registration
+* Secure Login using JWT Authentication
+* Google OAuth Login (Firebase Authentication)
+* Password Hashing using bcrypt
+* Password Strength Validation
+* Protected Routes
+* User-Specific Product Management
+* Rate Limiting for Authentication APIs
+
 ---
 
 ## Tech Stack
@@ -44,10 +55,16 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 * React Router DOM
 * Tailwind CSS
 * Vite
+* Firebase Authentication
+* Axios
 
 ### Backend
 
 * FastAPI
+* JWT Authentication
+* bcrypt
+* SlowAPI (Rate Limiting)
+* Firebase Admin SDK
 
 ### Database
 
@@ -134,6 +151,9 @@ The backend is built using FastAPI and provides RESTful APIs for product content
 - PUT /products/{id}
 - DELETE /products/{id}
 - GET /search
+- POST /auth/register
+- POST /auth/login
+- POST /auth/google
 
 ---
 
@@ -210,12 +230,18 @@ uvicorn app.main:app --reload
 - Database CRUD Operations
 - Environment Variable Configuration
 - Persistent Data Storage
+- User Registration & Login
+- JWT Authentication
+- Google OAuth Authentication
+- Password Hashing (bcrypt)
+- Password Validation
+- Protected Routes
+- User-Specific Products
+- Rate Limiting (SlowAPI)
 
 ### Upcoming
 
 - Google Gemini API Integration
-- User Authentication (JWT)
-- Product History
 - PDF Export
 - Deployment (Vercel + Render)
 

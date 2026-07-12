@@ -23,3 +23,14 @@ dist-ssr
 *.sln
 *.sw?
 app/firebase/firebase-key.json
+
+.env
+.env.*
+!.env.example
+
+app/firebase/firebase-key.json
+firebase-key.json
+
+.env
+.env.local
+.env.production

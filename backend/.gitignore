@@ -4,3 +4,9 @@ __pycache__/
 *.pyc
 .env
 app/firebase/firebase-key.json
+.env
+.env.*
+!.env.example
+
+app/firebase/firebase-key.json
+firebase-key.json
