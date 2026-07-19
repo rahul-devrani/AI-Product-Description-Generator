@@ -10,16 +10,19 @@ Many small and medium food processing businesses struggle to create compelling p
 
 ProDescription AI simplifies this process by allowing users to enter product information such as product name, ingredients, weight, and key features. The application then generates high-quality content tailored for e-commerce platforms.
 
+The application integrates Google's Gemini AI to generate structured marketing content in JSON format, which is parsed and displayed by the React frontend.
 ---
 
 ## Features
 
-### Content Generation
+### AI Content Generation
 
-* AI-powered Product Description Generation
-* Product Title Generation
-* Product Tagline Generation
-* Social Media Caption Generation
+* AI Product Title
+* AI Product Description
+* AI Product Tagline
+* AI SEO Keywords
+* AI Social Media Caption
+* AI Regeneration
 
 ### Content Optimization
 
@@ -65,6 +68,8 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 * bcrypt
 * SlowAPI (Rate Limiting)
 * Firebase Admin SDK
+* Google Gemini API
+* google-genai SDK
 
 ### Database
 
@@ -73,12 +78,19 @@ ProDescription AI simplifies this process by allowing users to enter product inf
 
 ### AI Integration
 
-* Rule-Based Content Generator (Current)
-* Google Gemini API (Planned)
+* Google Gemini API
+* Gemini Flash Model
+* AI-powered Product Title Generation
+* AI-powered Product Description Generation
+* AI-powered Product Tagline Generation
+* AI-powered SEO Keyword Generation
+* AI-powered Social Media Caption Generation
 
 ### Deployment
 
-* Vercel (Planned)
+* Currently configured for local development
+* Frontend: Vite
+* Backend: FastAPI
 * Render (Planned)
 
 ---
@@ -190,6 +202,8 @@ Example `.env`
 
 ```env
 MONGO_URI=your_mongodb_connection_string
+JWT_SECRET_KEY=your_secret_key
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 Install dependencies
@@ -238,10 +252,11 @@ uvicorn app.main:app --reload
 - Protected Routes
 - User-Specific Products
 - Rate Limiting (SlowAPI)
+- Google Gemini API Integration
+- Prompt Engineering Documentation
 
 ### Upcoming
 
-- Google Gemini API Integration
 - PDF Export
 - Deployment (Vercel + Render)
 

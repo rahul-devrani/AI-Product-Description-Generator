@@ -4,7 +4,7 @@
 
 This is the backend service for the **AI Product Description Generator** project developed using **FastAPI**.
 
-The backend provides REST APIs to generate AI-based product content, manage generated products, search products, and perform CRUD operations. Product data is stored in MongoDB Atlas using PyMongo, providing persistent database storage and complete CRUD functionality.
+The backend provides REST APIs to generate AI-based product content using Google's Gemini API, manage generated products, search products, and perform CRUD operations. Product data is stored in MongoDB Atlas using PyMongo, providing persistent database storage and complete CRUD functionality.
 
 ---
 
@@ -20,6 +20,8 @@ The backend provides REST APIs to generate AI-based product content, manage gene
 * JWT
 * Bcrypt
 * SlowAPI
+* Google Gemini API
+* google-genai SDK
 
 ---
 
@@ -41,7 +43,13 @@ backend
 │   ├── routes.py
 │   ├── models.py
 │   └── config.py
+│   └── auth_dependency.py
+│   └── auth_models.py
+│   └── auth_routes.py
+│   └── auth_utils.py
 │   └── database.py
+│   └── gemini_service.py
+│   └── limiter.py
 │
 ├── requirements.txt
 ├── .env.example
@@ -53,6 +61,9 @@ backend
 ## Current Architecture
 
 ```text
+User
+        │
+        ▼
 React Frontend
         │
         ▼
@@ -62,7 +73,16 @@ Axios API Calls
 FastAPI Backend
         │
         ▼
+Gemini API
+        │
+        ▼
+JSON Response
+        │
+        ▼
 MongoDB Atlas
+        │
+        ▼
+React UI
 ```
 ---
 
@@ -77,7 +97,7 @@ The application stores generated product information in a MongoDB collection nam
 # Features
 
 * RESTful API Development
-* Product Description Generation
+* AI Product Description Generation
 * Product CRUD Operations
 * Search Products
 * Swagger API Documentation
@@ -98,18 +118,18 @@ The application stores generated product information in a MongoDB collection nam
 
 # API Endpoints
 
-| Method | Endpoint          | Description              |
-| ------ | ----------------- | ------------------------ |
-| GET    | /                 | Check Backend Status     |
-| GET    | /products         | Get All Products         |
-| GET    | /products/{id}    | Get Product By ID        |
-| POST   | /generate         | Generate Product Content |
-| PUT    | /products/{id}    | Update Product           |
-| DELETE | /products/{id}    | Delete Product           |
-| GET    | /search?q=keyword | Search Products          |
-| POST   | /auth/register    | Register User            |
-| POST   | /auth/login       | Login User               |
-| POST   | /auth/google      | Google Login             |
+| Method | Endpoint          | Description                 |
+| ------ | ----------------- | ----------------------------|
+| GET    | /                 | Check Backend Status        |
+| GET    | /products         | Get All Products            |
+| GET    | /products/{id}    | Get Product By ID           |
+| POST   | /generate         | Generate AI Product Content |
+| PUT    | /products/{id}    | Update Product              |
+| DELETE | /products/{id}    | Delete Product              |
+| GET    | /search?q=keyword | Search Products             |
+| POST   | /auth/register    | Register User               |
+| POST   | /auth/login       | Login User                  |
+| POST   | /auth/google      | Google Login                |
 
 ---
 
@@ -191,14 +211,18 @@ Example:
 
 ```env
 MONGO_URI = ur_mongodb_connection_string
+JWT_SECRET_KEY = ur_jwt_secret
+GEMINI_API_KEY = ur_gemini_key
 ```
 ---
 
 # Future Improvements
 
-* Gemini API Integration
-* PDF Export 
-* Deployment 
+* PDF Export
+* Generation History
+* Multiple AI Tones
+* Multi-language Support
+* AI Prompt Versioning
 
 ---
 
