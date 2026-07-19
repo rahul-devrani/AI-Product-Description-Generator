@@ -15,3 +15,5 @@ JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
 TOKEN_EXPIRE_DAYS = int(
     os.getenv("TOKEN_EXPIRE_DAYS", 7)
 )
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")

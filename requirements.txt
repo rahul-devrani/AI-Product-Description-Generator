@@ -30,7 +30,7 @@ anaconda-navigator @ file:///C:/b/abs_5co9rfxmmi/croot/anaconda-navigator_174974
 anaconda-project @ file:///C:/b/abs_c3nd60wjs2/croot/anaconda-project_1746215311215/work
 annotated-doc==0.0.4
 annotated-types @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/annotated-types_1729043709318/work
-anyio @ file:///C:/b/abs_5c8w79vk0u/croot/anyio_1745334672105/work
+anyio==4.14.2
 appdirs==1.4.4
 archspec @ file:///croot/archspec_1709217642129/work
 argon2-cffi @ file:///opt/conda/conda-bld/argon2-cffi_1645000214183/work
@@ -150,7 +150,7 @@ google-cloud-core==2.6.0
 google-cloud-firestore==2.28.0
 google-cloud-storage==3.12.1
 google-crc32c==1.8.0
-google-generativeai==0.8.6
+google-genai==2.12.1
 google-pasta==0.2.0
 google-resumable-media==2.10.0
 googleapis-common-protos==1.75.0

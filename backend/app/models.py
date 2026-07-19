@@ -18,6 +18,8 @@ class ProductRequest(BaseModel):
         min_length=1
     )
 
+   
+
     key_features: str = Field(
         min_length=2
     )

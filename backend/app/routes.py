@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Response
-
+from app.gemini_service import generate_product_content
 from app.models import ProductRequest, Product
 from app.database import products_collection
 from fastapi import Depends
@@ -127,6 +127,14 @@ def generate_product(
     product: ProductRequest,
     current_user=Depends(get_current_user)):
 
+    generated = generate_product_content(
+        product.product_name,
+        product.ingredients,
+        product.weight,
+        product.key_features,
+        product.tone
+    )
+
     new_product = {
 
         "id": get_next_id(),
@@ -138,38 +146,22 @@ def generate_product(
 
         "weight": product.weight,
 
+        # "category": product.category,
+
         "key_features": product.key_features,
 
         "tone": product.tone,
 
-        "title": f"{product.tone} {product.product_name}",
+        "title": generated["title"],
 
-        "description": (
-            f"{product.product_name} is a premium quality product made using "
-            f"{product.ingredients}. It comes in {product.weight} packaging "
-            f"and offers {product.key_features.lower()}."
-        ),
+        "description": generated["description"],
 
-        "tagline": f"Experience the goodness of {product.product_name}.",
+        "tagline": generated["tagline"],
 
-        "seo_keywords": [
+        "seo_keywords": generated["seo_keywords"],
 
-            product.product_name.lower(),
+        "social_caption": generated["social_caption"],
 
-            product.tone.lower(),
-
-            "food product",
-
-            "healthy",
-
-            "premium quality"
-
-        ],
-
-        "social_caption": (
-            f"✨ Discover {product.product_name}! "
-            f"Fresh, healthy and crafted with quality ingredients."
-        )
 
     }
 
