@@ -121,7 +121,7 @@ def get_product(
 @router.post(
     "/generate",
     response_model=Product,
-    status_code=status.HTTP_201_CREATED
+    status_code=status.HTTP_200_OK
 )
 def generate_product(
     product: ProductRequest,
@@ -168,25 +168,6 @@ def generate_product(
     products_collection.insert_one(new_product)
 
     return product_to_model(new_product)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @router.put(
