@@ -487,7 +487,7 @@ const handleUpdate = async () => {
 
                 </div>
 
-                {/* Desktop / Tablet table view */}
+        
                 <div className="hidden md:block bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden">
 
                   <div className="overflow-x-auto">
@@ -623,7 +623,7 @@ const handleUpdate = async () => {
 
                 </div>
 
-                {/* Mobile card view */}
+            
                 <div className="md:hidden space-y-4">
 
                   {filteredProducts.length > 0 ? (
