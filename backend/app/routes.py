@@ -170,6 +170,27 @@ def generate_product(
     return product_to_model(new_product)
 
 
+
+@router.post(
+        "/regenerate",
+        status_code=status.HTTP_200_OK
+    )
+def regenerate_product(
+        product: ProductRequest,
+        current_user=Depends(get_current_user)
+    ):
+
+        generated = generate_product_content(
+            product.product_name,
+            product.ingredients,
+            product.weight,
+            product.key_features,
+            product.tone
+        )
+
+        return generated
+
+
 @router.put(
     "/products/{product_id}",
     response_model=Product,

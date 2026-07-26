@@ -68,6 +68,14 @@ export const updateProduct = async (id, productData) => {
   return response.data;
 };
 
+export const regenerateProduct = async (productData) => {
+  const response = await API.post(
+    "/regenerate",
+    productData
+  );
+
+  return response.data;
+};
 
 
 export const deleteProduct = async (id) => {
