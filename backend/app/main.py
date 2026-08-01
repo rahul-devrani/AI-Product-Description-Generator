@@ -29,7 +29,8 @@ app.add_middleware(
 )
 
 origins = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "https://prodescription.netlify.app",
 ]
 
 app.add_middleware(
