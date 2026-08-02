@@ -88,14 +88,9 @@ The application integrates Google's Gemini AI to generate structured marketing c
 
 ### Live Application
 
-**Frontend (Netlify):**
-https://prodescription.netlify.app
-
-**Backend API (Render):**
-https://ai-product-description-generator-vlqe.onrender.com
-
-**API Documentation (Swagger):**
-https://ai-product-description-generator-vlqe.onrender.com/docs
+- **Frontend:** https://prodescription.netlify.app
+- **Backend API:** https://ai-product-description-generator-vlqe.onrender.com
+- **Swagger Documentation:** https://ai-product-description-generator-vlqe.onrender.com/docs
 
 The frontend is deployed on Netlify, while the FastAPI backend is deployed on Render. MongoDB Atlas is used as the cloud database and Firebase Authentication is used for secure user authentication.
 
@@ -114,8 +109,6 @@ This project uses **MongoDB Atlas** as the cloud database.
 MongoDB was selected because product information is document-based and has a flexible schema. It integrates well with FastAPI using PyMongo and allows easy storage and retrieval of product data while supporting future scalability.
 
 ---
-
-## Project Structure
 
 ```text
 ## Project Structure
@@ -193,24 +186,47 @@ Environment variables are managed using a `.env` file.
 
 ## Database Schema
 
-The application currently stores generated product information in a MongoDB collection named `products`.
+The application uses **MongoDB Atlas** as the cloud database and consists of two collections:
 
-![Database Schema](images/schema-diagram.jpg)
+### users
+Stores registered user information such as:
+- Name
+- Email Address
+- Encrypted Password
+
+### products
+Stores AI-generated product information such as:
+- Product Name
+- Ingredients
+- Weight
+- Key Features
+- Tone
+- Generated Title
+- Description
+- Tagline
+- SEO Keywords
+- Social Media Caption
+
+Each product is associated with the authenticated user, ensuring that users can access and manage only their own generated content.
+
+![Database Schema](images/database-schema.png)
 
 ---
 
 ## Set Up the Database
 
-1. Create a free MongoDB Atlas cluster.
-2. Create a database user.
-3. Whitelist your IP address.
-4. Copy the MongoDB connection string.
-5. Create a `.env` file inside the backend folder.
-6. Add your MongoDB connection string.
-7. Install the required packages.
-8. Start the backend server.
+Follow these steps to configure the project with MongoDB Atlas:
 
-Example `.env`
+1. Create a free MongoDB Atlas cluster.
+2. Create a database user with read and write access.
+3. Add your IP address (or allow access from all IPs for development).
+4. Copy the MongoDB connection string.
+5. Create a `.env` file inside the `backend` directory.
+6. Add the required environment variables, including the MongoDB connection string, JWT configuration, and Gemini API key.
+7. Install all required dependencies.
+8. Start the FastAPI backend server.
+
+### Example `.env`
 
 ```env
 MONGO_URI=your_mongodb_connection_string
@@ -219,21 +235,21 @@ JWT_ALGORITHM=HS256
 TOKEN_EXPIRE_DAYS=7
 GEMINI_API_KEY=your_gemini_api_key
 ```
+> **Note:**  
+> To enable Google Authentication, place your Firebase Admin SDK service account key (`firebase-key.json`) inside the `backend/app/firebase/` directory or configure it securely using environment variables or secret files when deploying the application.
 
-Install dependencies
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run backend
+### Run Backend
 
 ```bash
 uvicorn app.main:app --reload
 ```
-
 ---
-
 
 ## Current Status
 
@@ -269,7 +285,7 @@ uvicorn app.main:app --reload
 - Google Gemini API Integration
 - Prompt Engineering Documentation
 
-### Upcoming
+### Future Enhancements
 
 - PDF Export
 - Download as DOCX
@@ -281,7 +297,11 @@ uvicorn app.main:app --reload
 
 ## Author
 
-Rahul Devrani
+**Rahul Devrani**
+
+B.Tech CSE (AI & Data Science)
+
+Graphic Era Deemed to be University
 
 Technology Business Incubator (TBI-GEU)
 

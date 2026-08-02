@@ -118,9 +118,30 @@ React UI
 
 ## Database Schema
 
-The application stores generated product information in a MongoDB collection named `products`.
+The application uses **MongoDB Atlas** as the cloud database and consists of two collections:
 
-![Database Schema](../images/schema-diagram.jpg)
+### users
+Stores registered user information such as:
+- Name
+- Email Address
+- Encrypted Password
+
+### products
+Stores AI-generated product information such as:
+- Product Name
+- Ingredients
+- Weight
+- Key Features
+- Tone
+- Generated Title
+- Description
+- Tagline
+- SEO Keywords
+- Social Media Caption
+
+Each product is associated with the authenticated user, ensuring that users can access and manage only their own generated content.
+
+![Database Schema](images/database-schema.png)
 
 ---
 
