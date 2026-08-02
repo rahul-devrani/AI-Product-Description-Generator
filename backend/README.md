@@ -8,6 +8,18 @@ The backend provides REST APIs to generate AI-based product content using Google
 
 ---
 
+## Live Backend
+
+**Base URL**
+
+https://ai-product-description-generator-vlqe.onrender.com
+
+**Swagger Documentation**
+
+https://ai-product-description-generator-vlqe.onrender.com/docs
+
+---
+
 # Tech Stack
 
 * Python
@@ -22,6 +34,24 @@ The backend provides REST APIs to generate AI-based product content using Google
 * SlowAPI
 * Google Gemini API
 * google-genai SDK
+
+## Deployment
+
+**Backend Hosting:** Render
+
+**Database:** MongoDB Atlas
+
+**Authentication:** Firebase Authentication
+
+**AI Model:** Google Gemini API
+
+---
+
+## Known Limitations
+
+- Render free tier spins down after inactivity.
+- First request may take around 30–60 seconds.
+- Gemini API usage depends on available quota.
 
 ---
 
@@ -138,7 +168,7 @@ The application stores generated product information in a MongoDB collection nam
 ## Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/rahul-devrani/AI-Product-Description-Generator.git
 ```
 
 ---
@@ -211,7 +241,7 @@ Example:
 
 ```env
 MONGO_URI = ur_mongodb_connection_string
-JWT_SECRET_KEY = ur_jwt_secret
+JWT_SECRET = ur_jwt_secret
 GEMINI_API_KEY = ur_gemini_key
 ```
 ---

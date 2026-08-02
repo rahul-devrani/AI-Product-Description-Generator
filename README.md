@@ -86,12 +86,24 @@ The application integrates Google's Gemini AI to generate structured marketing c
 * AI-powered SEO Keyword Generation
 * AI-powered Social Media Caption Generation
 
-### Deployment
+### Live Application
 
-* Currently configured for local development
-* Frontend: Vite
-* Backend: FastAPI
-* Render (Planned)
+**Frontend (Netlify):**
+https://prodescription.netlify.app
+
+**Backend API (Render):**
+https://ai-product-description-generator-vlqe.onrender.com
+
+**API Documentation (Swagger):**
+https://ai-product-description-generator-vlqe.onrender.com/docs
+
+The frontend is deployed on Netlify, while the FastAPI backend is deployed on Render. MongoDB Atlas is used as the cloud database and Firebase Authentication is used for secure user authentication.
+
+## Known Limitations
+
+* The backend is hosted on Render's free tier. If the application remains inactive for some time, the first request may take 30–60 seconds while the backend wakes up.
+* AI content generation depends on the availability and quota of the Google Gemini API.
+* Internet connectivity is required for AI content generation and authentication services.
 
 ---
 
@@ -202,7 +214,9 @@ Example `.env`
 
 ```env
 MONGO_URI=your_mongodb_connection_string
-JWT_SECRET_KEY=your_secret_key
+JWT_SECRET=your_secret_key
+JWT_ALGORITHM=HS256
+TOKEN_EXPIRE_DAYS=7
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
@@ -258,7 +272,10 @@ uvicorn app.main:app --reload
 ### Upcoming
 
 - PDF Export
-- Deployment (Vercel + Render)
+- Download as DOCX
+- Product History
+- Multi-language Support
+- AI Tone Presets
 
 ---
 
